@@ -39,8 +39,17 @@
 Сторінка деталей курсу повинна надавати огляд результату тесту(якщо пройдений) або короткий опис з можливістю розпочати тест(якщо не пройдений).
 
 ## Лабораторна 1(Factory, Abstract Factory)
-Задачу "Створення механізму додавання нових користувачів" можна реалізувати за допомогою патерну Factory Method:
-  Є абстрактний клас User, і підкласи Quizer, QuizPublisher, Administrator з різною реалізацією методу getPermissions
-  Є AuthRecordFactory клас, у якого є абстрактний метод create і дочірні класи QuizerFactory, QuizPublisherFactory, AdministratorFactory,
-кожен з яких вміє створювати відповідного користувача.
-  В server.js створено POST ендпоїнт, котрий вміє створювати різних юзерів на базі ролі котра приходить і повертає дані юзера і його дозволи(permissions) 
+#### Задачу "Створення механізму додавання нових користувачів" можна реалізувати за допомогою патерну Factory Method:
+- Є абстрактний клас User, і підкласи Quizer, QuizPublisher, Administrator з різною реалізацією методу getPermissions
+- Є AuthRecordFactory клас, у якого є абстрактний метод create і дочірні класи QuizerFactory, QuizPublisherFactory, AdministratorFactory, кожен з яких вміє створювати відповідного користувача.
+- Для створення різних користувачів потрібно створити відповідну фабрику
+    * factory = new QuizerFactory({ name, email, password })
+- і викликати метод create() що поверне нам користувача відповідного типу
+    * const newUser = factory.create()
+#### Підзадачу «Створення запитань до опитувальника» можна реалізувати за допомогою паттерну AbstractFactory
+- Є абстрактний клас Question і дочірні класи MultipleChoiceQuestion, FreeAnswerQuestion, DragAndDropQuestion і SingleChoiceQuestion.
+- Є QuestionFactory – абстрактний клас, що надає метод createQuestion реалізація котрого в SingleChoiceQuestionFactory, MultipleChoiceQuestionFactory, FreeAnswerQuestionFactory, DragAndDropQuestionFactory повертатиме екземпляри відповідних класів «питань».
+- Є клас-клієнт, котрий отримуватиме в конструкторі якусь з фабрик і створюватиме відповідне «питання»(Question)
+- Далі для створення питання знадобиться лише викликати конструктор відповідної фабрики з його необхідними параметрами передавши цей виклик в конструктор класа-клієнта
+    * quizQuestion = new QuestionFactoryManager(new DragAndDropQuestionFactory({question, answers}))
+- і ми зможемо взаємодіяти з об’єктом quizQuestion як з відповідним об’єктом питання.
