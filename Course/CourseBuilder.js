@@ -1,4 +1,5 @@
 const Course = require("./Course");
+const { Lesson } = require("~/domains/Lesson");
 
 /**
  * Facilitates course creation by allowing the addition, editing, reordering, and linking of lessons.
@@ -6,13 +7,6 @@ const Course = require("./Course");
  * @class CourseBuilder
  */
 class CourseBuilder {
-  /**
-   * Creates a CourseBuilder instance with a reference to an existing Course object (optional).
-   * If no course is provided, a new Course object will be created.
-   *
-   * @constructor
-   * @param {Course} [course] - An optional Course object to serve as the foundation for course creation.
-   */
   /**
    * Creates a CourseBuilder instance with a reference to the base CoursePrototype.
    *
@@ -34,13 +28,11 @@ class CourseBuilder {
    * @param {string} [quizId] - Optional foreign key referencing a quiz associated with the lesson.
    * @returns {CourseBuilder} - This object instance for method chaining.
    */
-      // TODO Uncomment when Lesson class is added
-//   addLesson(title, order, content = "", contentAssetId = "", quizId = "") {
-
-//     const lesson = new Lesson(title, order, content, contentAssetId, quizId);
-//     this.course.lessons.push(lesson);
-//     return this; // Allow method chaining for better readability
-//   }
+  addLesson(title, order, content = "", contentAssetId = "", quizId = "") {
+    const lesson = new Lesson(title, order, content, contentAssetId, quizId);
+    this.course.lessons.push(lesson);
+    return this; // Allow method chaining for better readability
+  }
 
   /**
    * Edits an existing lesson within the course structure by index.
@@ -56,35 +48,34 @@ class CourseBuilder {
    * @returns {CourseBuilder} - This object instance for method chaining.
    * @throws {Error} - If an invalid lesson index is provided.
    */
-  // TODO Uncomment when Lesson class is added
-//   editLesson(
-//     lessonIndex,
-//     newTitle,
-//     newContent = "",
-//     newContentAssetId = null,
-//     newQuizId = null,
-//     state,
-//   ) {
-//     if (lessonIndex >= 0 && lessonIndex < this.course.lessons.length) {
-//       /**
-//        * The left operand of the binary expression.
-//        * @type {Lesson}
-//        */
-//       const lesson = this.course.lessons[lessonIndex];
+  editLesson(
+    lessonIndex,
+    newTitle,
+    newContent = "",
+    newContentAssetId = null,
+    newQuizId = null,
+    state,
+  ) {
+    if (lessonIndex >= 0 && lessonIndex < this.course.lessons.length) {
+      /**
+       * The left operand of the binary expression.
+       * @type {Lesson}
+       */
+      const lesson = this.course.lessons[lessonIndex];
 
-//       lesson.title = newTitle || lesson.title;
-//       lesson.content = newContent || lesson.content;
-//       lesson.contentAssetId = newContentAssetId || lesson.contentAssetId;
-//       lesson.quizId = newQuizId || lesson.quizId;
+      lesson.title = newTitle || lesson.title;
+      lesson.content = newContent || lesson.content;
+      lesson.contentAssetId = newContentAssetId || lesson.contentAssetId;
+      lesson.quizId = newQuizId || lesson.quizId;
 
-//       if (state) {
-//         lesson.setState(state);
-//       }
-//     } else {
-//       throw new Error("Invalid lesson index provided");
-//     }
-//     return this; // Allow method chaining
-//   }
+      if (state) {
+        lesson.setState(state);
+      }
+    } else {
+      throw new Error("Invalid lesson index provided");
+    }
+    return this; // Allow method chaining
+  }
 
   /**
    * Reorders existing lessons within the course by swapping their positions.
@@ -96,22 +87,21 @@ class CourseBuilder {
    * @returns {CourseBuilder} - This object instance for method chaining.
    * @throws {Error} - If invalid lesson index provided for reordering
    */
-  // TODO Uncomment when Lesson class is added
-//   reorderLessons(fromIndex, toIndex) {
-//     if (
-//       fromIndex >= 0 &&
-//       fromIndex < this.course.lessons.length &&
-//       toIndex >= 0 &&
-//       toIndex < this.course.lessons.length &&
-//       fromIndex !== toIndex
-//     ) {
-//       const lesson = this.course.lessons.splice(fromIndex, 1)[0];
-//       this.course.lessons.splice(toIndex, 0, lesson);
-//     } else {
-//       throw new Error("Invalid lesson index provided for reordering");
-//     }
-//     return this; // Allow method
-//   }
+  reorderLessons(fromIndex, toIndex) {
+    if (
+      fromIndex >= 0 &&
+      fromIndex < this.course.lessons.length &&
+      toIndex >= 0 &&
+      toIndex < this.course.lessons.length &&
+      fromIndex !== toIndex
+    ) {
+      const lesson = this.course.lessons.splice(fromIndex, 1)[0];
+      this.course.lessons.splice(toIndex, 0, lesson);
+    } else {
+      throw new Error("Invalid lesson index provided for reordering");
+    }
+    return this; // Allow method
+  }
   /**
    * Links a content asset (e.g., PDF, video) to a specific lesson by index.
    * Throws an error if an invalid lesson index is provided.
@@ -122,17 +112,16 @@ class CourseBuilder {
    * @returns {CourseBuilder} - This object instance for method chaining.
    * @throws {Error} - If an invalid lesson index provided for linking content asset
    */
-  // TODO Uncomment when Lesson class is added
-//   linkContentAsset(lessonIndex, contentAssetId) {
-//     if (lessonIndex >= 0 && lessonIndex < this.course.lessons.length) {
-//       this.course.lessons[lessonIndex].contentAssetId = contentAssetId;
-//     } else {
-//       throw new Error(
-//         "Invalid lesson index provided for linking content asset",
-//       );
-//     }
-//     return this; // Allow method chaining
-//   }
+  linkContentAsset(lessonIndex, contentAssetId) {
+    if (lessonIndex >= 0 && lessonIndex < this.course.lessons.length) {
+      this.course.lessons[lessonIndex].contentAssetId = contentAssetId;
+    } else {
+      throw new Error(
+        "Invalid lesson index provided for linking content asset",
+      );
+    }
+    return this; // Allow method chaining
+  }
 
   /**
    * Links a quiz to a specific lesson by index.

@@ -7,6 +7,7 @@ const COURSE_CATEGORY_TYPES = {
     TECHNOLOGY: "TECHNOLOGY",
     LIFE_STYLE: "LIFE_STYLE",
   };
+  const { Lesson } = require("~/domains/Lesson");
 
 /**
  * Represents a course model within the online learning platform.
@@ -31,6 +32,10 @@ class Course {
     this.instructorId = instructorId || uuid.v4();
     this.category = category || COURSE_CATEGORY_TYPES.LIFE_STYLE;
     this.price = price || 0;
+    /**
+     * @type {Lesson[]}
+     * @public
+     */
     this.lessons = []; // Array to store Lesson objects
   }
 
@@ -52,7 +57,6 @@ class Course {
   getPrice() {
     return this.price;
   }
-
 }
 
 module.exports = Course;
