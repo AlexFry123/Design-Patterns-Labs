@@ -1,12 +1,27 @@
 const Course = require("./Course");
 const { Lesson } = require("~/domains/Lesson");
 
+class Builder {
+  addLesson(title, order, content = "", contentAssetId = "", quizId = ""){}
+  editLesson(
+    lessonIndex,
+    newTitle,
+    newContent = "",
+    newContentAssetId = null,
+    newQuizId = null,
+    state,
+  ) {}
+  reorderLessons(fromIndex, toIndex) {}
+  linkContentAsset(lessonIndex, contentAssetId) {}
+  linkQuiz(lessonIndex, quizId) {}
+}
+
 /**
  * Facilitates course creation by allowing the addition, editing, reordering, and linking of lessons.
  *
  * @class CourseBuilder
  */
-class CourseBuilder {
+class CourseBuilder extends Builder {
   /**
    * Creates a CourseBuilder instance with a reference to the base CoursePrototype.
    *
@@ -32,6 +47,12 @@ class CourseBuilder {
     const lesson = new Lesson(title, order, content, contentAssetId, quizId);
     this.course.lessons.push(lesson);
     return this; // Allow method chaining for better readability
+  }
+
+  deleteLesson(title) {
+    const deletedLesson = this.course.lessons.filter((lesson) => lesson.title === title)
+    this.course.lessons = this.course.lessons.filter((lesson) => lesson.title !== title)
+    return deletedLesson;
   }
 
   /**

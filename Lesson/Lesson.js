@@ -87,6 +87,10 @@ class Lesson {
     return this.state;
   }
 
+  displayLesson() {
+    this.deliveryStrategy.deliverLesson();
+  }
+
   /**
    * Allows the user to mark the lesson as completed.
    *

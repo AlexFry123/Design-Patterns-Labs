@@ -21,6 +21,9 @@ const COURSE_CATEGORY_TYPES = {
     LIFE_STYLE: "LIFE_STYLE",
   };
 const Lesson = require("./Lesson/Lesson");
+const VideoLectureStrategy = require("./Lesson/VideoLectureStrategy");
+const InteractiveExerciseStrategy = require("./Lesson/InteractiveExerciseStrategy");
+const TextContentStrategy = require("./Lesson/TextContentStrategy");
 
 app.use(express.json()); // Для обробки JSON-запитів
 
@@ -102,6 +105,84 @@ app.post("/courses", (req, res) => {
     data: { email, name, password, role, rights: newUser.getPermissions() },
   });
 });
+
+app.get("/lessons", async (req, res) => {
+
+  // Example usage
+  const videoLectureStrategy = new VideoLectureStrategy();
+  const interactiveExerciseStrategy = new InteractiveExerciseStrategy();
+  const textContentStrategy = new TextContentStrategy();
+
+  const lesson1 = new Lesson(
+    "Introduction",
+    1,
+    "Introduction text",
+    null,
+    uuid.v4(),
+    videoLectureStrategy,
+  );
+
+  const lesson2 = new Lesson(
+    "Interactive Activity",
+    2,
+    "",
+    null,
+    uuid.v4(),
+    interactiveExerciseStrategy,
+  );
+
+  const lesson3 = new Lesson(
+    "Conclusion",
+    3,
+    "",
+    null,
+    uuid.v4(),
+    textContentStrategy,
+  );
+
+  await lesson1.displayLesson(); // Calls VideoLectureStrategy.deliverLesson()
+  await lesson2.displayLesson(); // Calls InteractiveExerciseStrategy.deliverLesson()
+  await lesson3.displayLesson(); // Calls TextContentStrategy.deliverLesson() (assuming lessonContent is set)
+
+  res.status(200).send({
+    message: "Успішно показано уроки"
+  });
+});
+
+app.put("/course/:id", (req, res) => {
+  const lessonTemplates1 = [new Lesson("Conclusion", 2)];
+  const prototype1 = new CoursePrototype(
+    "Basic Course",
+    "A fundamental course...",
+    "instructor123",
+    LIFE_STYLE,
+    lessonTemplates1,
+  );
+  
+  // Example usage: Build a course with some functionalities
+  const courseBuilder = new CourseBuilder(prototype1);
+  courseBuilder.addLesson("Introduction", 1);
+  
+  const course = courseBuilder.getCourse();
+  
+  const newLesson = new Lesson("JavaScript for beginners", 3);
+  const addLessonCommand = new AddLessonCommand(courseBuilder,newLesson);
+  course.setActionsCommand(addLessonCommand);
+  course.executeActionsCommand();
+  
+  console.log("addLessonCommand", course);
+  
+  const deleteLessonCommand = new DeleteLessonCommand(courseBuilder,newLesson.title);
+  course.setActionsCommand(deleteLessonCommand);
+  course.executeActionsCommand();
+  
+  console.log("deleteLessonCommand", course);
+
+  res.status(200).send({
+    message: "Успішно змінено курс"
+  });
+});
+
 
 app.listen(PORT, () => {
   console.log(`🚀 Сервер запущено на http://localhost:${PORT}`);
