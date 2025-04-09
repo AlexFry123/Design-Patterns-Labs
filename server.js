@@ -24,6 +24,8 @@ const Lesson = require("./Lesson/Lesson");
 const VideoLectureStrategy = require("./Lesson/VideoLectureStrategy");
 const InteractiveExerciseStrategy = require("./Lesson/InteractiveExerciseStrategy");
 const TextContentStrategy = require("./Lesson/TextContentStrategy");
+const {AddAssessmentStep,CreateContentStep,DefineLearningObjectivesStep} = require('./Content/ContentTemplateStep')
+const Content = require('./Content/Content')
 
 app.use(express.json()); // Для обробки JSON-запитів
 
@@ -182,6 +184,21 @@ app.put("/course/:id", (req, res) => {
     message: "Успішно змінено курс"
   });
 });
+
+app.put("/content/:id", (req, res) => {
+
+    // Define a content template with specific steps
+    const myTemplate = new Content("Interactive Lecture", [
+      new DefineLearningObjectivesStep(),
+      new CreateContentStep(),
+      new AddAssessmentStep(),
+    ]);
+  
+    // Generate the content using the template
+    myTemplate.generateContent();
+  
+
+})
 
 
 app.listen(PORT, () => {
