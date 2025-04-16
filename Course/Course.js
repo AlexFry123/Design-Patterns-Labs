@@ -1,13 +1,14 @@
 const uuid = require("uuid");
 const COURSE_CATEGORY_TYPES = {
-    ACADEMIC: "ACADEMIC",
-    PERSONAL_DEVELOPMENT: "PERSONAL_PERSONAL_DEVELOPMENT",
-    BUSINESS_AND_PROFESSIONAL: "BUSINESS_AND_PROFESSIONAL",
-    ART_AND_DESIGN: "ART_AND_DESIGN",
-    TECHNOLOGY: "TECHNOLOGY",
-    LIFE_STYLE: "LIFE_STYLE",
-  };
-  const { Lesson } = require("~/domains/Lesson");
+  ACADEMIC: "ACADEMIC",
+  PERSONAL_DEVELOPMENT: "PERSONAL_PERSONAL_DEVELOPMENT",
+  BUSINESS_AND_PROFESSIONAL: "BUSINESS_AND_PROFESSIONAL",
+  ART_AND_DESIGN: "ART_AND_DESIGN",
+  TECHNOLOGY: "TECHNOLOGY",
+  LIFE_STYLE: "LIFE_STYLE",
+};
+const Lesson = require("../Lesson/Lesson");
+const LessonIterator = require("../Lesson/LessonIterator");
 
 /**
  * Represents a course model within the online learning platform.
@@ -15,12 +16,11 @@ const COURSE_CATEGORY_TYPES = {
  * @class
  */
 class Course {
-
   /**
-  * Stores the currently set course editing command.
-  *
-  * This private property holds a reference to the `CourseActionsCommand` object that represents the pending course edit action.
-  */
+   * Stores the currently set course editing command.
+   *
+   * This private property holds a reference to the `CourseActionsCommand` object that represents the pending course edit action.
+   */
   _actionsCommand = null;
 
   _observers = [];
@@ -68,33 +68,33 @@ class Course {
     return this.price;
   }
 
-    /**
+  /**
    * Registers an observer to receive notifications about course completion.
    *
    * @param observer - The CourseCompletionObserver object to be registered.
    */
-    registerObserver(observer) {
-      this._observers.push(observer);
+  registerObserver(observer) {
+    this._observers.push(observer);
+  }
+
+  /**
+   * Unregisters an observer to stop receiving course completion notifications.
+   *
+   * @param observer - The CourseCompletionObserver object to be unregistered.
+   */
+  unregisterObserver(observer) {
+    const observerIndex = this._observers.indexOf(observer);
+    if (observerIndex !== -1) {
+      this._observers.splice(observerIndex, 1);
     }
-  
-    /**
-     * Unregisters an observer to stop receiving course completion notifications.
-     *
-     * @param observer - The CourseCompletionObserver object to be unregistered.
-     */
-    unregisterObserver(observer) {
-      const observerIndex = this._observers.indexOf(observer);
-      if (observerIndex !== -1) {
-        this._observers.splice(observerIndex, 1);
-      }
-    }
-  
-    /**
-     * Notifies all registered observers about the completion of this course.
-     */
-    notifyCourseCompletion() {
-      this._observers.forEach((observer) => observer.onCourseCompletion(this));
-    }
+  }
+
+  /**
+   * Notifies all registered observers about the completion of this course.
+   */
+  notifyCourseCompletion() {
+    this._observers.forEach((observer) => observer.onCourseCompletion(this));
+  }
 
   /**
    * Sets the editing command for the course.
@@ -121,6 +121,34 @@ class Course {
     }
   }
 
+  /**
+   * Returns a new LessonIterator instance to iterate over the lessons in the course.
+   *
+   * @returns {LessonIterator} - An iterator object that can be used to access
+   *   lessons sequentially.
+   */
+  getLessons() {
+    return new LessonIterator(this.lessons);
+  }
+  /**
+   * (Assuming this method exists within your Course class)
+   *
+   * Retrieves the course content, potentially using an iterator or other mechanism.
+   *
+   * @returns {Lesson[]} - An array of lesson objects.
+   */
+  getCourseContent() {
+    const lessonIterator = this.getLessons();
+
+    const contents = [];
+    while (lessonIterator.hasNext()) {
+      const lesson = lessonIterator.next().value;
+
+      contents.push(lesson);
+    }
+
+    return contents;
+  }
 }
 
 module.exports = Course;

@@ -4,7 +4,7 @@
  * Subclasses will implement this interface to define specific
  * content generation steps.
  */
-class ContentTemplateStep {
+class ContentStep {
     /**
      * Executes the specific logic for the content generation step.
      */
@@ -14,7 +14,7 @@ class ContentTemplateStep {
 /**
  * Concrete step for adding assessments to evaluate learner understanding.
  */
-class AddAssessmentStep extends ContentTemplateStep {
+class AddAssessmentStep extends ContentStep {
   /**
    * Adds assessments to measure learner understanding of the content.
    *
@@ -31,7 +31,7 @@ class AddAssessmentStep extends ContentTemplateStep {
 /**
  * Concrete step for creating the actual content.
  */
-class CreateContentStep extends ContentTemplateStep {
+class CreateContentStep extends ContentStep {
     /**
      * Creates the content based on the defined learning objectives.
      *
@@ -46,7 +46,7 @@ class CreateContentStep extends ContentTemplateStep {
 /**
  * Concrete step for defining learning objectives as part of content creation.
  */
-class DefineLearningObjectivesStep extends ContentTemplateStep {
+class DefineLearningObjectivesStep extends ContentStep {
     /**
      * Prompts the user to define learning objectives for the content.
      *

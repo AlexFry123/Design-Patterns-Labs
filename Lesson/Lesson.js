@@ -1,10 +1,6 @@
 const uuid = require("uuid");
-const LESSON_STATES = {
-    NOT_STARTED: "NOT_STARTED",
-    IN_PROGRESS: "IN_PROGRESS",
-    COMPLETED: "COMPLETED",
-  };
-  
+const {CompletedState,NotStartedState} = require('./LessonState')
+
 /**
  * Represents a learning module within a course.
  *
@@ -39,7 +35,7 @@ class Lesson {
     this.contentAssetId = contentAssetId;
     this.quizId = quizId || uuid.v4();
     this.deliveryStrategy = deliveryStrategy;
-    this.state = LESSON_STATES.NOT_STARTED; // Initial state
+    this.state = new NotStartedState(); // Initial state
   }
 
   /**
@@ -72,7 +68,7 @@ class Lesson {
   /**
    * Sets the current state of the lesson.
    *
-   * @param {string} state - The new state for the lesson.
+   * @param {LessonState} state - The new state object for the lesson.
    */
   setState(state) {
     this.state = state;
@@ -81,10 +77,30 @@ class Lesson {
   /**
    * Returns the current state of the lesson progress.
    *
-   * @returns {string} - The current state of the lesson.
+   * @returns {LessonState} - The current state object of the lesson.
    */
   getState() {
     return this.state;
+  }
+
+  /**
+   * Transitions the lesson state to the next state in the sequence.
+   *
+   * This method delegates the logic to the current state object through
+   * the `next()` method of the current `LessonState`.
+   */
+  nextState() {
+    this.state = this.state.next();
+  }
+
+  /**
+   * Allows the user to mark the lesson as completed.
+   *
+   * This method delegates the logic to the current state object.
+   */
+  completeLesson() {
+    if (this.state.getStateLabel() === LESSON_STATES.COMPLETED) return;
+    this.setState(new CompletedState());
   }
 
   displayLesson() {
