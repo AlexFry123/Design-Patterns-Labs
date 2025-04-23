@@ -35,6 +35,12 @@ class User {
   
       return this.balance?.[paymentType] || 0;
     }
+
+    receiveMessage(message, from) {
+      console.log(
+        `${this.role} ${this.name} received message: ${message} (from ${from.role} ${from.name})`,
+      );
+    }
 }
 
 // Класи для кожної ролі
