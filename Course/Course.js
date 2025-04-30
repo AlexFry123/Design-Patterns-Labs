@@ -149,6 +149,26 @@ class Course {
 
     return contents;
   }
+
+    /**
+   * Accepts a ContentVisitor object and allows it to process the Course and its child Lessons.
+   *
+   * This method calls the `visitCourse` method on the provided visitor, passing the current
+   * Course object as an argument. Additionally, it iterates through the course's lessons
+   * and calls the `acceptVisitor` method on each lesson, effectively allowing the visitor
+   * to traverse the entire course content structure.
+   *
+   * @param {ContentVisitor} visitor - The visitor object that will process the course content.
+   */
+    acceptVisitor(visitor) {
+      visitor.visitCourse(this);
+      const lessonIterator = this.getLessons();
+  
+      while (lessonIterator.hasNext()) {
+        const lesson = lessonIterator.next().value;
+        lesson.acceptVisitor(visitor);
+      }
+    }
 }
 
 module.exports = Course;
