@@ -150,7 +150,7 @@ class Course {
     return contents;
   }
 
-    /**
+  /**
    * Accepts a ContentVisitor object and allows it to process the Course and its child Lessons.
    *
    * This method calls the `visitCourse` method on the provided visitor, passing the current
@@ -160,15 +160,16 @@ class Course {
    *
    * @param {ContentVisitor} visitor - The visitor object that will process the course content.
    */
-    acceptVisitor(visitor) {
-      visitor.visitCourse(this);
-      const lessonIterator = this.getLessons();
-  
-      while (lessonIterator.hasNext()) {
-        const lesson = lessonIterator.next().value;
-        lesson.acceptVisitor(visitor);
-      }
+  acceptVisitor(visitor) {
+    visitor.visitCourse(this);
+    const lessonIterator = this.getLessons();
+
+    while (lessonIterator.hasNext()) {
+      const lesson = lessonIterator.next().value;
+      lesson.acceptVisitor(visitor);
     }
+  }
+
 }
 
 module.exports = Course;

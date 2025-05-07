@@ -1,35 +1,60 @@
-/**
- * Represents a template for generating content.
- *
- * This class follows the Template Method pattern, defining a
- * general structure for content generation while allowing subclasses
- * to provide specific steps.
- */
+const CONTENT_TYPES = {
+    VIDEO: "VIDEO",
+    TEXT: "TEXT",
+    QUIZ: "QUIZ",
+  };
+
 class Content {
     /**
-     * Creates a new ContentTemplate instance.
+     * Creates a new Content object.
      *
-     * @param {string} name - The name of the content template.
-     * @param {ContentTemplateStep[]} steps - An array of ContentTemplateStep objects
-     *   defining the steps involved in generating the content.
+     * @param {string} title - The title of the content piece.
+     * @param {string} type - The type of content (e.g., "lecture", "quiz", "assignment").
+     * @param {*} content - The actual content data (format depends on the type).
      */
-    constructor(name, steps) {
-      this.name = name;
-      this.steps = steps;
-    }
-  
-    /**
-     * Generates the content based on the defined steps.
-     *
-     * This method iterates through the `steps` array and calls the `execute`
-     * method on each `ContentTemplateStep` object. The `execute` method
-     * is responsible for performing the specific content generation logic.
-     */
-    generateContent() {
-      for (const step of this.steps) {
-        step.execute();
-      }
+    constructor(title, type, content) {
+      // Abstract content type
+      this.title = title;
+      this.type = type;
+      this.content = content;
     }
   }
 
-module.exports = Content
+  class QuizContent extends Content {
+    /**
+     * Creates a new QuizContent object.
+     *
+     * @param {string} title - The title of the quiz.
+     * @param {Question[]} questions - An array of question objects with specific structure
+     *                             (replace 'array' with the actual question structure).
+     */
+    constructor(title, questions) {
+      super(title, CONTENT_TYPES.QUIZ, questions);
+    }
+  }
+  class TextContent extends Content {
+    /**
+     * Creates a new TextContent object.
+     *
+     * @param {string} title - The title of the text content.
+     * @param {string} text - The actual text content.
+     */
+    constructor(title, text) {
+      super(title, CONTENT_TYPES.TEXT, text);
+    }
+  }
+  class VideoContent extends Content {
+    /**
+     * Creates a new VideoContent object.
+     *
+     * @param {string} title - The title of the video content.
+     * @param {string} videoUrl - The URL of the video.
+     */
+    constructor(title, videoUrl) {
+      super(title, CONTENT_TYPES.VIDEO, videoUrl);
+    }
+  }
+
+  module.exports = {
+    VideoContent, QuizContent, TextContent, Content, CONTENT_TYPES
+  }
